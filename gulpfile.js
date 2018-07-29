@@ -15,6 +15,8 @@ const debug = require('gulp-debug');
 const cheerio = require('gulp-cheerio');
 const posthtml = require('gulp-posthtml');
 const include = require('posthtml-include');
+const notify = require('gulp-notify');
+const plumber = require('gulp-plumber');
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const assetsGlob = [
@@ -28,6 +30,9 @@ gulp.task('clean', () => {
 
 gulp.task('html', () => {
   return gulp.src('src/*.html')
+  .pipe(plumber({
+    errorHandler: notify.onError()
+  }))
   .pipe(posthtml([
     include()
   ]))
@@ -36,6 +41,9 @@ gulp.task('html', () => {
 
 gulp.task('style', () => {
   return gulp.src('src/sass/**/style.scss')
+  .pipe(plumber({
+    errorHandler: notify.onError()
+  }))
   .pipe(gulpIf(isDevelopment, sourcemaps.init()))
   .pipe(sass({ outputStyle: 'compressed' }))
   .pipe(postcss([
@@ -49,6 +57,9 @@ gulp.task('style', () => {
 
 gulp.task('img', () => {
   return gulp.src('src/img/**/*.{jpg,png,svg}')
+  .pipe(plumber({
+    errorHandler: notify.onError()
+  }))
   .pipe(imagemin([
     imagemin.optipng(),
     imagemin.jpegtran({ progressive: true }),
@@ -59,6 +70,9 @@ gulp.task('img', () => {
 
 gulp.task('webp', () => {
   return gulp.src('src/img/**/*.{jpg,png}')
+  .pipe(plumber({
+    errorHandler: notify.onError()
+  }))
   .pipe(webp({ quality: 90 }))
   .pipe(gulp.dest('dist/img'));
 
@@ -66,6 +80,9 @@ gulp.task('webp', () => {
 
 gulp.task('sprite', () => {
   return gulp.src('src/icons/**/*.*')
+  .pipe(plumber({
+    errorHandler: notify.onError()
+  }))
   .pipe(cheerio({
     run: function ($) {
       $('[fill]').removeAttr('fill');
@@ -81,6 +98,9 @@ gulp.task('sprite', () => {
 
 gulp.task('copy', () => {
   return gulp.src(assetsGlob, { base: 'src' })
+  .pipe(plumber({
+    errorHandler: notify.onError()
+  }))
   .pipe(cached('assets'))
   .pipe(debug({ title: 'copy' }))
   .pipe(gulp.dest('dist'));
