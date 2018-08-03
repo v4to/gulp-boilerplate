@@ -1,2 +1,11 @@
+@import "mixins";
 @import "normalize";
+@import "reset";
+
+body {
+  background-image: url('../img/discount.svg');
+  color: red;
+}
+
+
 
