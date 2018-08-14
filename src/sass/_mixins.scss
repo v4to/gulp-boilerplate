@@ -49,3 +49,29 @@ $root-context: 16;
 
   @return $pixels / $context * 1rem;
 }
+
+@mixin bMobile() {
+  @media (min-width: 320px) {
+    @content;
+  }
+}
+
+@mixin bTablet() {
+  @media (min-width: 760px) {
+    @content;
+  }
+}
+
+@mixin bDesktop() {
+  @media (min-width: 1200px) {
+    @content;
+  }
+}
+
+@mixin fFace($fontFamily, $fontFileName) {
+  @font-face {
+    font-family: $fontFamily;
+    src: url("/fonts/#{$fontFileName}.woff2") format("woff2"),
+    url("/fonts/#{$fontFileName}.woff") format("woff");
+  }
+}
