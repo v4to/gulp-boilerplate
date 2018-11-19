@@ -17,12 +17,18 @@ const posthtml = require('gulp-posthtml');
 const include = require('posthtml-include');
 const notify = require('gulp-notify');
 const plumber = require('gulp-plumber');
+const deploy = require('gulp-gh-pages');
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const assetsGlob = [
   'src/fonts/*.*',
   'src/js/*.*',
 ];
+
+gulp.task('deploy', () => {
+    return gulp.src('build/**/*.*')
+        .pipe(deploy());
+});
 
 gulp.task('clean', () => {
   return del('dist');
