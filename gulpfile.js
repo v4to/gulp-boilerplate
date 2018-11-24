@@ -21,8 +21,8 @@ const deploy = require('gulp-gh-pages');
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 const assetsGlob = [
-  'src/fonts/*.*',
-  'src/js/*.*',
+    'src/fonts/*.*',
+    'src/js/*.*',
 ];
 
 gulp.task('deploy', () => {
@@ -31,96 +31,97 @@ gulp.task('deploy', () => {
 });
 
 gulp.task('clean', () => {
-  return del('dist');
+    return del('dist');
 });
 
 gulp.task('html', () => {
-  return gulp.src('src/*.html')
-  .pipe(plumber({
-    errorHandler: notify.onError()
-  }))
-  .pipe(posthtml([
-    include()
-  ]))
-  .pipe(gulp.dest('dist'));
+    return gulp.src('src/*.html')
+        .pipe(plumber({
+            errorHandler: notify.onError()
+        }))
+        .pipe(posthtml([
+            include()
+        ]))
+        .pipe(gulp.dest('dist'));
 });
 
 gulp.task('style', () => {
-  return gulp.src('src/sass/**/style.scss')
-  .pipe(plumber({
-    errorHandler: notify.onError()
-  }))
-  .pipe(gulpIf(isDevelopment, sourcemaps.init()))
-  .pipe(sass({ outputStyle: 'compressed' }))
-  .pipe(postcss([
-    autoprefixer({ grid: true, browsers: ['>1%'] })
-  ]))
-  .pipe(rename('style.min.css'))
-  .pipe(gulpIf(isDevelopment, sourcemaps.write('.')))
-  .pipe(gulp.dest('dist/style'))
-  .pipe(browserSync.stream());
+    return gulp.src('src/sass/**/style.scss')
+
+        .pipe(plumber({
+            errorHandler: notify.onError()
+        }))
+        .pipe(gulpIf(isDevelopment, sourcemaps.init()))
+        .pipe(sass({ outputStyle: 'compressed' }))
+        .pipe(postcss([
+            autoprefixer({ grid: true, browsers: ['>1%'] })
+        ]))
+        .pipe(rename('style.min.css'))
+        .pipe(gulpIf(isDevelopment, sourcemaps.write('.')))
+        .pipe(gulp.dest('dist/style'))
+        .pipe(browserSync.stream());
 });
 
 gulp.task('img', () => {
-  return gulp.src('src/img/**/*.{jpg,png,svg}')
-  .pipe(plumber({
-    errorHandler: notify.onError()
-  }))
-  .pipe(imagemin([
-    imagemin.optipng(),
-    imagemin.jpegtran({ progressive: true }),
-    imagemin.svgo()
-  ]))
-  .pipe(gulp.dest('dist/img'));
+    return gulp.src('src/img/**/*.{jpg,png,svg}')
+        .pipe(plumber({
+            errorHandler: notify.onError()
+        }))
+        .pipe(imagemin([
+            imagemin.optipng(),
+            imagemin.jpegtran({ progressive: true }),
+            imagemin.svgo()
+        ]))
+        .pipe(gulp.dest('dist/img'));
 });
 
 gulp.task('webp', () => {
-  return gulp.src('src/img/**/*.{jpg,png}')
-  .pipe(plumber({
-    errorHandler: notify.onError()
-  }))
-  .pipe(webp({ quality: 90 }))
-  .pipe(gulp.dest('dist/img'));
+    return gulp.src('src/img/**/*.{jpg,png}')
+        .pipe(plumber({
+            errorHandler: notify.onError()
+        }))
+        .pipe(webp({ quality: 90 }))
+        .pipe(gulp.dest('dist/img'));
 
 });
 
 gulp.task('sprite', () => {
-  return gulp.src('src/icons/**/*.*')
-  .pipe(plumber({
-    errorHandler: notify.onError()
-  }))
-  .pipe(cheerio({
-    run: function ($) {
-      $('[fill]').removeAttr('fill');
-    },
-    parserOptions: { xmlMode: true }
-  }))
-  .pipe(svgstore({
-    inlineSvg: true
-  }))
-  .pipe(rename('sprite.svg'))
-  .pipe(gulp.dest('dist/img'));
+    return gulp.src('src/icons/**/*.*')
+        .pipe(plumber({
+            errorHandler: notify.onError()
+        }))
+        .pipe(cheerio({
+            run: function ($) {
+                $('[fill]').removeAttr('fill');
+            },
+            parserOptions: { xmlMode: true }
+        }))
+        .pipe(svgstore({
+            inlineSvg: true
+        }))
+        .pipe(rename('sprite.svg'))
+        .pipe(gulp.dest('dist/img'));
 });
 
 gulp.task('copy', () => {
-  return gulp.src(assetsGlob, { base: 'src' })
-  .pipe(plumber({
-    errorHandler: notify.onError()
-  }))
-  .pipe(cached('assets'))
-  .pipe(debug({ title: 'copy' }))
-  .pipe(gulp.dest('dist'));
+    return gulp.src(assetsGlob, { base: 'src' })
+        .pipe(plumber({
+            errorHandler: notify.onError()
+        }))
+        .pipe(cached('assets'))
+        .pipe(debug({ title: 'copy' }))
+        .pipe(gulp.dest('dist'));
 });
 
 gulp.task('watch', () => {
-  gulp.watch('src/sass/**/*.*', gulp.series('style'));
-  gulp.watch('src/*.html', gulp.series('html')).on('change', browserSync.reload);
+    gulp.watch('src/sass/**/*.*', gulp.series('style'));
+    gulp.watch('src/*.html', gulp.series('html')).on('change', browserSync.reload);
 });
 
 gulp.task('serve', () => {
-  browserSync.init({
-    server: './dist'
-  });
+    browserSync.init({
+        server: './dist'
+    });
 });
 
 gulp.task('build', gulp.series('clean', 'img', 'webp', 'sprite', 'copy', gulp.parallel('html', 'style')));
