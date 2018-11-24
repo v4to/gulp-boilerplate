@@ -47,7 +47,6 @@ gulp.task('html', () => {
 
 gulp.task('style', () => {
     return gulp.src('src/sass/**/style.scss')
-
         .pipe(plumber({
             errorHandler: notify.onError()
         }))
@@ -114,6 +113,9 @@ gulp.task('copy', () => {
 });
 
 gulp.task('watch', () => {
+    gulp.watch('src/img/**/*.{jpg,png}', gulp.series('webp'));
+    gulp.watch('src/img/**/*.{jpg,png,svg}', gulp.series('img'));
+    gulp.watch('src/icons/**/*.*', gulp.series('sprite'));
     gulp.watch('src/sass/**/*.*', gulp.series('style'));
     gulp.watch('src/*.html', gulp.series('html')).on('change', browserSync.reload);
 });
