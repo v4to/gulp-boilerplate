@@ -53,7 +53,7 @@ gulp.task('style', () => {
     .pipe(gulpIf(isDevelopment, sourcemaps.init()))
     .pipe(sass({ outputStyle: 'compressed' }))
     .pipe(postcss([
-      autoprefixer({ grid: true, browsers: ['>1%'] })
+      autoprefixer({ grid: true })
     ]))
     .pipe(rename('style.min.css'))
     .pipe(gulpIf(isDevelopment, sourcemaps.write('.')))
