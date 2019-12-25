@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "gulp",
+    "start": "",
+    "dev": "NODE_ENV=development gulp dev",
+    "build": "NODE_ENV=production gulp build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -29,9 +31,12 @@
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",
+    "gulp-stylus": "^2.7.0",
     "gulp-svgstore": "^6.1.1",
     "gulp-webp": "^3.0.0",
-    "posthtml-include": "^1.2.0"
+    "posthtml-include": "^1.2.0",
+    "webpack": "^4.41.4",
+    "webpack-stream": "^5.2.1"
   },
   "dependencies": {},
   "browserslist": [

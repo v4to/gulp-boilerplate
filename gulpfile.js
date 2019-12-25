@@ -1,5 +1,8 @@
 const gulp = require('gulp');
-const sass = require('gulp-sass');
+// const sass = require('gulp-sass');
+const stylus = require('gulp-stylus');
+const webpack = require('webpack-stream');
+const compiler = require('webpack');
 const postcss = require('gulp-postcss');
 const autoprefixer = require('autoprefixer');
 const rename = require('gulp-rename');
@@ -22,7 +25,7 @@ const deploy = require('gulp-gh-pages');
 const isDevelopment = process.env.NODE_ENV === 'development';
 const assetsGlob = [
   'src/fonts/*.*',
-  'src/js/*.*',
+  // 'src/js/*.*',
 ];
 
 gulp.task('deploy', () => {
@@ -32,6 +35,18 @@ gulp.task('deploy', () => {
 
 gulp.task('clean', () => {
   return del('dist');
+});
+
+gulp.task('js', () => {
+  return gulp.src('src/js/index.js')
+    .pipe(webpack({
+      output: {
+        filename: 'index.js'
+      },
+    }, compiler))
+    // .pipe(rename('bundle.js'))
+    .pipe(gulp.dest('dist'))
+    .pipe(browserSync.stream());
 });
 
 gulp.task('html', () => {
@@ -46,12 +61,12 @@ gulp.task('html', () => {
 });
 
 gulp.task('style', () => {
-  return gulp.src('src/sass/**/style.scss')
+  return gulp.src('src/sass/**/style.styl')
     .pipe(plumber({
       errorHandler: notify.onError()
     }))
     .pipe(gulpIf(isDevelopment, sourcemaps.init()))
-    .pipe(sass({ outputStyle: 'compressed' }))
+    .pipe(stylus({ compress: true }))
     .pipe(postcss([
       autoprefixer({ grid: true })
     ]))
@@ -117,6 +132,7 @@ gulp.task('watch', () => {
   gulp.watch('src/img/**/*.{jpg,png,svg}', gulp.series('img'));
   gulp.watch('src/icons/**/*.*', gulp.series('sprite'));
   gulp.watch('src/sass/**/*.*', gulp.series('style'));
+  gulp.watch('src/js/**/*.*', gulp.series('js'));
   gulp.watch('src/*.html', gulp.series('html')).on('change', browserSync.reload);
 });
 
@@ -126,6 +142,6 @@ gulp.task('serve', () => {
   });
 });
 
-gulp.task('build', gulp.series('clean', 'img', 'webp', 'sprite', 'copy', gulp.parallel('html', 'style')));
+gulp.task('build', gulp.series('clean', 'img', 'webp', 'sprite', 'copy', gulp.parallel('html', 'style', 'js')));
 gulp.task('dev', gulp.series('build', gulp.parallel('watch', 'serve')));
 
