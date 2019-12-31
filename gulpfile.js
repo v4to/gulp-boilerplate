@@ -1,5 +1,5 @@
 const gulp = require('gulp');
-// const sass = require('gulp-sass');
+// const styl = require('gulp-styl');
 const stylus = require('gulp-stylus');
 const webpack = require('webpack-stream');
 const compiler = require('webpack');
@@ -61,7 +61,7 @@ gulp.task('html', () => {
 });
 
 gulp.task('style', () => {
-  return gulp.src('src/sass/**/style.styl')
+  return gulp.src('src/styl/**/style.styl')
     .pipe(plumber({
       errorHandler: notify.onError()
     }))
@@ -131,7 +131,7 @@ gulp.task('watch', () => {
   gulp.watch('src/img/**/*.{jpg,png}', gulp.series('webp'));
   gulp.watch('src/img/**/*.{jpg,png,svg}', gulp.series('img'));
   gulp.watch('src/icons/**/*.*', gulp.series('sprite'));
-  gulp.watch('src/sass/**/*.*', gulp.series('style'));
+  gulp.watch('src/styl/**/*.*', gulp.series('style'));
   gulp.watch('src/js/**/*.*', gulp.series('js'));
   gulp.watch('src/*.html', gulp.series('html')).on('change', browserSync.reload);
 });
