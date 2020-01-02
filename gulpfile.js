@@ -29,7 +29,7 @@ const assetsGlob = [
 ];
 
 gulp.task('deploy', () => {
-  return gulp.src('build/**/*.*')
+  return gulp.src('dist/**/*.*')
     .pipe(deploy());
 });
 
@@ -39,12 +39,14 @@ gulp.task('clean', () => {
 
 gulp.task('js', () => {
   return gulp.src('src/js/index.js')
+    .pipe(plumber({
+      errorHandler: notify.onError()
+    }))
     .pipe(webpack({
       output: {
         filename: 'index.js'
       },
     }, compiler))
-    // .pipe(rename('bundle.js'))
     .pipe(gulp.dest('dist'))
     .pipe(browserSync.stream());
 });
