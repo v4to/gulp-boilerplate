@@ -29,6 +29,7 @@
     "gulp-posthtml": "^3.0.4",
     "gulp-remember": "^1.0.1",
     "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-stylus": "^2.7.0",
     "gulp-svgstore": "^6.1.1",

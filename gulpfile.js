@@ -1,6 +1,5 @@
 const gulp = require('gulp');
-// const styl = require('gulp-styl');
-const stylus = require('gulp-stylus');
+const sass = require('gulp-sass');
 const webpack = require('webpack-stream');
 const compiler = require('webpack');
 const postcss = require('gulp-postcss');
@@ -63,18 +62,18 @@ gulp.task('html', () => {
 });
 
 gulp.task('style', () => {
-  return gulp.src('src/styl/**/style.styl')
+  return gulp.src('src/styles/**/style.scss')
     .pipe(plumber({
       errorHandler: notify.onError()
     }))
     .pipe(gulpIf(isDevelopment, sourcemaps.init()))
-    .pipe(stylus({ compress: true }))
+    .pipe(sass({ outputStyle: 'compressed' }))
     .pipe(postcss([
       autoprefixer({ grid: true })
     ]))
     .pipe(rename('style.min.css'))
     .pipe(gulpIf(isDevelopment, sourcemaps.write('.')))
-    .pipe(gulp.dest('dist/style'))
+    .pipe(gulp.dest('dist/styles'))
     .pipe(browserSync.stream());
 });
 
@@ -133,7 +132,7 @@ gulp.task('watch', () => {
   gulp.watch('src/img/**/*.{jpg,png}', gulp.series('webp'));
   gulp.watch('src/img/**/*.{jpg,png,svg}', gulp.series('img'));
   gulp.watch('src/icons/**/*.*', gulp.series('sprite'));
-  gulp.watch('src/styl/**/*.*', gulp.series('style'));
+  gulp.watch('src/styles/**/*.*', gulp.series('style'));
   gulp.watch('src/js/**/*.*', gulp.series('js'));
   gulp.watch('src/*.html', gulp.series('html')).on('change', browserSync.reload);
 });
